@@ -1,0 +1,35 @@
+service: api-retry
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+stepFunctions:
+  stateMachines:
+    retry:
+      events:
+        - http:
+            path: retry
+            method: POST
+      definition:
+        Comment: "A service to retry HTTP requests with backoff"
+        StartAt: TryRequest
+        States:
+          TryRequest:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-tryRequest"
+            Retry:
+            - ErrorEquals:
+              - States.ALL
+              IntervalSeconds: 30
+              MaxAttempts: 5
+              BackoffRate: 2
+            End: true
+
+functions:
+  tryRequest:
+    handler: handler.tryRequest
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
