@@ -21,9 +21,9 @@ stepFunctions:
             Retry:
             - ErrorEquals:
               - States.ALL
-              IntervalSeconds: 30
-              MaxAttempts: 5
-              BackoffRate: 2
+              IntervalSeconds: ${opt:interval}
+              MaxAttempts: ${opt:maxAttempts}
+              BackoffRate: ${opt:backoffRate}
             End: true
 
 functions:
