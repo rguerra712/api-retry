@@ -13,7 +13,7 @@ module.exports.tryRequest = async (event, context, stuff) => {
     body: event.body
   });
 
-  if (statusCodeChecker.isSuccessfulStatusCode(response))
+  if (!statusCodeChecker.isSuccessfulStatusCode(response))
   {
     const unsuccessfulStatusCodeMessage = `Unsuccessful status code ${response.status}`;
     throw new Error(unsuccessfulStatusCodeMessage);
